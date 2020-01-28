@@ -21,8 +21,8 @@ namespace Projeto.Service.Mapping
             CreateMap<FilmeAlterarModel, Filme>();
             CreateMap<FilmeCadastroModel, Filme>();
 
-            CreateMap<IngressoEdicaoModel, Filme>();
-            CreateMap<IngressoCadastroModel, Filme>();
+            CreateMap<IngressoEdicaoModel, Ingresso>();
+            CreateMap<IngressoCadastroModel, Ingresso>();
 
         }
     }

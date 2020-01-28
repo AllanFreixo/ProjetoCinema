@@ -7,5 +7,6 @@ namespace Projeto.Data.Contracts
 {
     public interface IClienteRepository : IBaseRepository<Cliente>
     {
+        
     }
 }

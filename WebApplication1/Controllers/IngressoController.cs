@@ -11,6 +11,7 @@ using Projeto.Data.Mapping;
 using Projeto.Data.Contracts;
 using Projeto.Data.Entity;
 using Projeto.Service.Model.Ingresso;
+using Projeto.Utilidade.Email;
 
 namespace Projeto.Service.Controllers
 {
@@ -30,6 +31,17 @@ namespace Projeto.Service.Controllers
             {
 
                 unityOfWork.IngressoReposioty.Inserir(mapper.Map<Ingresso>(model));
+                foreach (var item in unityOfWork.ClienteRepository.PesquisarTodos())
+                {
+                    if(item.IdCliente == model.IdCliente)
+                    {
+                        EnviarEmail enviarEmail = new EnviarEmail();
+                        enviarEmail.SendMail(item.Email);
+                    }
+                }
+                
+
+                
                 return Ok("Ingresso Cadastrado com Sucesso");
 
             }
@@ -86,7 +98,7 @@ namespace Projeto.Service.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<IngressoConsultaModel>), 200)]
-        public IActionResult PesquisarTodos(IngressoConsultaModel model,
+        public IActionResult PesquisarTodos(
             [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
@@ -109,7 +121,7 @@ namespace Projeto.Service.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(List<IngressoConsultaModel>), 200)]
+        [ProducesResponseType(typeof(IngressoConsultaModel), 200)]
         public IActionResult PesquisarClienteId(int id,
             [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
@@ -120,7 +132,7 @@ namespace Projeto.Service.Controllers
             try
             {
 
-                return Ok(mapper.Map<List<IngressoConsultaModel>>
+                return Ok(mapper.Map<IngressoConsultaModel>
                     (unityOfWork.IngressoReposioty.PesquisarId(id)));
 
 

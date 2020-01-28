@@ -11,7 +11,7 @@ namespace Projeto.Data.Context
         public DataContext CreateDbContext(string[] args)
         {
             var builder = new DbContextOptionsBuilder<DataContext>();
-            builder.UseSqlServer(@"Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=CINEMAPROJETO;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            builder.UseSqlServer(@"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=TCC;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
             return new DataContext(builder.Options);
         }

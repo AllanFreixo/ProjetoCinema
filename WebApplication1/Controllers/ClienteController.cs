@@ -17,21 +17,39 @@ namespace Projeto.Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class ClienteController : ControllerBase
     {
+
+        #region Cadastrar
         [HttpPost]
         public IActionResult Post(ClienteCadastroModel model,
-            [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
+           [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Ocorreram erros de Validação");
+
             }
             try
             {
+                foreach (var item in unityOfWork.ClienteRepository.PesquisarTodos())
+                {
+                    if(model.Email == item.Email)
+                    {
+                        return BadRequest("Email Já Cadastrado em outro usuario utilize outro Email");
+                    }
 
+                    if(model.CPF == item.CPF)
+                    {
+                        return BadRequest("CPF Já Cadastrado em outro usuario utilize outro CPF");
+                    }
+                }
+
+                
                 unityOfWork.ClienteRepository.Inserir(mapper.Map<Cliente>(model));
                 return Ok("Cliente Cadastrado com Sucesso");
+
 
             }
             catch (Exception e)
@@ -40,10 +58,12 @@ namespace Projeto.Service.Controllers
             }
 
         }
+        #endregion
 
+        #region Alterar
         [HttpPut]
         public IActionResult Put(ClienteAlterarModel model,
-            [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
+           [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
             {
@@ -62,10 +82,12 @@ namespace Projeto.Service.Controllers
             }
 
         }
+        #endregion
 
+        #region Excluir
         [HttpDelete("{Id}")]
         public IActionResult Delete(int Id,
-            [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
+           [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
             {
@@ -84,11 +106,13 @@ namespace Projeto.Service.Controllers
             }
 
         }
+        #endregion
 
+        #region Pesquisar Todos
         [HttpGet]
-        [ProducesResponseType(typeof(List<ClienteConsultaModel>),200)]
-        public IActionResult PesquisarTodos(ClienteConsultaModel model,
-            [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
+        [ProducesResponseType(typeof(List<ClienteConsultaModel>), 200)]
+        public IActionResult PesquisarTodos(
+           [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
             {
@@ -108,20 +132,24 @@ namespace Projeto.Service.Controllers
             }
 
         }
+        #endregion
 
+        #region Pesquisar Id
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(List<ClienteConsultaModel>), 200)]
+        [ProducesResponseType(typeof(ClienteConsultaModel), 200)]
         public IActionResult PesquisarClienteId(int id,
             [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Ocorreram erros de Validação");
+
+
             }
             try
             {
 
-                return Ok(mapper.Map<List<ClienteConsultaModel>>
+                return Ok(mapper.Map<ClienteConsultaModel>
                     (unityOfWork.ClienteRepository.PesquisarId(id)));
 
 
@@ -132,5 +160,7 @@ namespace Projeto.Service.Controllers
             }
 
         }
+        #endregion
+
     }
 }

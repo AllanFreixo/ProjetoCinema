@@ -85,7 +85,7 @@ namespace Projeto.Service.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(List<FilmeConsultaModel>), 200)]
-        public IActionResult PesquisarTodos(FilmeConsultaModel model,
+        public IActionResult PesquisarTodos(
             [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
             if (!ModelState.IsValid)
@@ -108,7 +108,7 @@ namespace Projeto.Service.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(List<FilmeConsultaModel>), 200)]
+        [ProducesResponseType(typeof(FilmeConsultaModel), 200)]
         public IActionResult PesquisarClienteId(int id,
             [FromServices] IMapper mapper, [FromServices] IUnityOfWork unityOfWork)
         {
@@ -119,7 +119,7 @@ namespace Projeto.Service.Controllers
             try
             {
 
-                return Ok(mapper.Map<List<FilmeConsultaModel>>
+                return Ok(mapper.Map<FilmeConsultaModel>
                     (unityOfWork.FilmeRepository.PesquisarId(id)));
 
 
